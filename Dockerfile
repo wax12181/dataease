@@ -8,9 +8,9 @@ ADD mapFiles/* /opt/dataease/data/feature/full/
 
 ADD drivers/* /opt/dataease/drivers/
 
-ADD backend/target/backend-$IMAGE_TAG.jar /opt/apps
+ADD backend/target/backend-1.18.9.jar /opt/apps
 
-ENV JAVA_APP_JAR=/opt/apps/backend-$IMAGE_TAG.jar
+ENV JAVA_APP_JAR=/opt/apps/backend-1.18.9.jar
 
 ENV AB_OFF=true
 

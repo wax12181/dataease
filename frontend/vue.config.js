@@ -17,6 +17,7 @@ const name = defaultSettings.title || 'vue Admin Template' // page title
 const port = process.env.port || process.env.npm_config_port || 9528 // dev port
 const parallel = process.env.NODE_ENV === 'development'
 module.exports = {
+  publicPath: parallel ? './' : '././',
   productionSourceMap: true,
   parallel,
   // 使用mock-server
@@ -52,7 +53,6 @@ module.exports = {
     },
     output: process.env.NODE_ENV === 'development' ? {} : {
       filename: `js/[name].[contenthash:8].${pkg.version}.js`,
-      publicPath: '/',
       chunkFilename: `js/[name].[contenthash:8].${pkg.version}.js`
     },
     plugins: [
