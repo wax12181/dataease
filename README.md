@@ -82,6 +82,10 @@ DataEase 是开源的数据可视化分析工具，帮助用户快速分析数�
 curl -sSL https://dataease.oss-cn-hangzhou.aliyuncs.com/quick_start.sh | bash
 ```
 
+**源码编译**
+
+[maven repository下载](https://pan.qingteng.cn/s/bckJfyqEfSRNLJC)
+
 **学习资料**
 
 -   [在线文档](https://dataease.io/docs/)
