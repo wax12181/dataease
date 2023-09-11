@@ -33,7 +33,7 @@
   const user = getQueryVariable('user')
   const terminal = getQueryVariable('terminal')
   const attachParams = getQueryVariable('attachParams')
-  let url = "/#/delink?link=" + encodeURIComponent(link)
+  let url = "./#/delink?link=" + encodeURIComponent(link)
   if (terminal) {
     url += '&terminal=' + terminal
   }

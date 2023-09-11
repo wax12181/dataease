@@ -66,6 +66,7 @@ import org.pentaho.di.www.SlaveServerTransStatus;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -75,6 +76,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static io.dataease.commons.utils.EnvUtils.createWithEnv;
 
 @Service
 public class ExtractDataService {
@@ -98,6 +101,8 @@ public class ExtractDataService {
     private EngineService engineService;
     @Resource
     private KettleService kettleService;
+    @Resource
+    private Environment environment;
 
 
     private static final String lastUpdateTime = "${__last_update_time__}";
@@ -975,7 +980,7 @@ public class ExtractDataService {
             case mysql:
             case TiDB:
             case StarRocks:
-                MysqlConfiguration mysqlConfiguration = new Gson().fromJson(datasource.getConfiguration(), MysqlConfiguration.class);
+                MysqlConfiguration mysqlConfiguration = createWithEnv(datasource.getConfiguration(), MysqlConfiguration.class, environment);
                 dataMeta = new DatabaseMeta("db", "MYSQL", "Native", mysqlConfiguration.getHost().trim(), mysqlConfiguration.getDataBase().trim(), mysqlConfiguration.getPort().toString(), mysqlConfiguration.getUsername(), mysqlConfiguration.getPassword());
                 if (StringUtils.isNotEmpty(mysqlConfiguration.getExtraParams()) && mysqlConfiguration.getExtraParams().split("&").length > 0) {
                     String[] params = mysqlConfiguration.getExtraParams().split("&");
@@ -1073,6 +1078,8 @@ public class ExtractDataService {
         File file = new File(root_path + transName + ".ktr");
         FileUtils.writeStringToFile(file, transXml, "UTF-8");
     }
+
+
 
     private Map<String, String> getSelectSQL(String extractType, DatasetTable datasetTable, Datasource datasource, List<DatasetTableField> datasetTableFields, String selectSQL) {
         Map<String, String> sql = new HashMap<>();

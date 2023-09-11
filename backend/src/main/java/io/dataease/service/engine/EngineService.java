@@ -31,6 +31,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static io.dataease.commons.utils.EnvUtils.createWithEnv;
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class EngineService {
@@ -40,6 +42,8 @@ public class EngineService {
     private DeEngineMapper deEngineMapper;
     @Resource
     private DatasourceService datasource;
+    @Resource
+    private Environment environment;
 
     static private List<String> simple_engine = Arrays.asList("engine_mysql");
 
@@ -216,7 +220,7 @@ public class EngineService {
         DeEngine engine = new DeEngine();
         engine.setId(UUID.randomUUID().toString());
         engine.setType("engine_mysql");
-        MysqlConfiguration mysqlConfiguration = new MysqlConfiguration();
+        MysqlConfiguration mysqlConfiguration = createWithEnv(new MysqlConfiguration(), environment);
         Pattern WITH_SQL_FRAGMENT = Pattern.compile("jdbc:mysql://(.*):(\\d+)/(.*)");
         Matcher matcher = WITH_SQL_FRAGMENT.matcher(env.getProperty("spring.datasource.url"));
         if (!matcher.find()) {

@@ -190,7 +190,7 @@ public class PanelLinkService {
         result.setValid(link.getValid());
         result.setEnablePwd(link.getEnablePwd());
         result.setPwd(link.getPwd());
-        result.setUri(BASEURL + buildLinkParam(link));
+        result.setUri(contextPath + BASEURL + buildLinkParam(link));
         result.setOverTime(link.getOverTime());
         return result;
     }
@@ -271,7 +271,7 @@ public class PanelLinkService {
         if (CollectionUtils.isEmpty(mappings)) {
             PanelLink panelLink = new PanelLink();
             panelLink.setResourceId("error-resource-id");
-            return BASEURL + buildLinkParam(panelLink);
+            return contextPath + BASEURL + buildLinkParam(panelLink);
         }
         PanelLinkMapping mapping = mappings.get(0);
         String resourceId = mapping.getResourceId();

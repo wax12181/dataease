@@ -20,15 +20,20 @@ import io.dataease.plugins.datasource.provider.ExtendedJdbcClassLoader;
 import io.dataease.plugins.datasource.query.QueryProvider;
 import io.dataease.provider.ProviderFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.*;
 
+import static io.dataease.commons.utils.EnvUtils.createWithEnv;
+
 @Service("jdbc")
 public class JdbcProvider extends DefaultJdbcProvider {
 
+    @Resource
+    private Environment environment;
 
     @Resource
     private DeDriverMapper deDriverMapper;
@@ -202,7 +207,7 @@ public class JdbcProvider extends DefaultJdbcProvider {
             case mariadb:
             case TiDB:
             case StarRocks:
-                MysqlConfiguration mysqlConfiguration = new Gson().fromJson(datasourceRequest.getDatasource().getConfiguration(), MysqlConfiguration.class);
+                MysqlConfiguration mysqlConfiguration = createWithEnv(datasourceRequest.getDatasource().getConfiguration(), MysqlConfiguration.class, environment);
                 return mysqlConfiguration.getDataBase();
             case sqlServer:
                 SqlServerConfiguration sqlServerConfiguration = new Gson().fromJson(datasourceRequest.getDatasource().getConfiguration(), SqlServerConfiguration.class);
@@ -390,7 +395,7 @@ public class JdbcProvider extends DefaultJdbcProvider {
             case ds_doris:
             case TiDB:
             case StarRocks:
-                MysqlConfiguration mysqlConfiguration = new Gson().fromJson(datasourceRequest.getDatasource().getConfiguration(), MysqlConfiguration.class);
+                MysqlConfiguration mysqlConfiguration = createWithEnv(datasourceRequest.getDatasource().getConfiguration(), MysqlConfiguration.class, environment);
                 username = mysqlConfiguration.getUsername();
                 password = mysqlConfiguration.getPassword();
                 defaultDriver = "com.mysql.jdbc.Driver";
@@ -544,7 +549,7 @@ public class JdbcProvider extends DefaultJdbcProvider {
             case ds_doris:
             case TiDB:
             case StarRocks:
-                MysqlConfiguration mysqlConfiguration = new Gson().fromJson(datasourceRequest.getDatasource().getConfiguration(), MysqlConfiguration.class);
+                MysqlConfiguration mysqlConfiguration = createWithEnv(datasourceRequest.getDatasource().getConfiguration(), MysqlConfiguration.class, environment);
                 dataSource.setUrl(mysqlConfiguration.getJdbc());
                 dataSource.setDriverClassName("com.mysql.jdbc.Driver");
                 dataSource.setValidationQuery("select 1");
@@ -779,7 +784,7 @@ public class JdbcProvider extends DefaultJdbcProvider {
             case ds_doris:
             case TiDB:
             case StarRocks:
-                MysqlConfiguration mysqlConfiguration = new Gson().fromJson(datasource.getConfiguration(), MysqlConfiguration.class);
+                MysqlConfiguration mysqlConfiguration = createWithEnv(datasource.getConfiguration(), MysqlConfiguration.class, environment);
                 mysqlConfiguration.getJdbc();
                 if(!mysqlConfiguration.getDataBase().matches("^[0-9a-zA-Z_.-]{1,}$")){
                     throw new Exception("Invalid database name");
@@ -840,6 +845,7 @@ public class JdbcProvider extends DefaultJdbcProvider {
                 break;
         }
     }
+
 
 
 }

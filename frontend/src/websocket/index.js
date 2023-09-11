@@ -4,7 +4,7 @@ import Stomp from 'stompjs'
 import store from '@/store'
 class DeWebsocket {
   constructor() {
-    this.ws_url = '/websocket'
+    this.ws_url = './websocket'
     this.client = null
     this.channels = [
       {

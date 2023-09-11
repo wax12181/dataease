@@ -65,6 +65,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static io.dataease.commons.utils.EnvUtils.createWithEnv;
+
 @Service
 public class DatasourceService {
 
@@ -92,6 +94,8 @@ public class DatasourceService {
     private UtilMapper utilMapper;
     @Resource
     private ExtTaskInstanceMapper extTaskInstanceMapper;
+    @Resource
+    Environment environment;
 
     public Collection<DataSourceType> types() {
         Collection<DataSourceType> types = new ArrayList<>();
@@ -192,7 +196,7 @@ public class DatasourceService {
         }
 
         if (datasourceDTO.getType().equalsIgnoreCase(DatasourceTypes.mysql.toString())) {
-            MysqlConfiguration mysqlConfiguration = new Gson().fromJson(datasourceDTO.getConfiguration(), MysqlConfiguration.class);
+            MysqlConfiguration mysqlConfiguration = createWithEnv(datasourceDTO.getConfiguration(), MysqlConfiguration.class, environment);
             datasourceDTO.setConfiguration(new Gson().toJson(mysqlConfiguration));
         }
         if (datasourceDTO.getType().equalsIgnoreCase(DatasourceTypes.api.toString())) {
@@ -639,7 +643,7 @@ public class DatasourceService {
         if (datasource == null) {
             return;
         }
-        MysqlConfiguration mysqlConfiguration = new Gson().fromJson(datasource.getConfiguration(), MysqlConfiguration.class);
+        MysqlConfiguration mysqlConfiguration = createWithEnv(datasource.getConfiguration(), MysqlConfiguration.class, environment);
         Pattern WITH_SQL_FRAGMENT = Pattern.compile("jdbc:mysql://(.*):(\\d+)/(.*)");
         Matcher matcher = WITH_SQL_FRAGMENT.matcher(env.getProperty("spring.datasource.url"));
         if (!matcher.find()) {
